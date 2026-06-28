@@ -11,6 +11,17 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Apply saved/preferred theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var t =
+            localStorage.getItem("gd-theme") ||
+            (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>
@@ -23,6 +34,7 @@
         <div class="brand">
           <img id="logo" src="%VITE_LOGO%" alt="logo" class="logo" />
           <h3 class="title">%VITE_TITLE%</h3>
+          <button id="theme_toggle" class="icon-btn" aria-label="Toggle dark mode"></button>
         </div>
         <p class="description">%VITE_DESCRIPTION%</p>
       </div>

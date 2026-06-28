@@ -1,5 +1,5 @@
 :root {
-  /* Google Material palette */
+  /* Google Material palette (light) */
   --primary: #1a73e8;
   --primary-hover: #1967d2;
   --on-primary: #ffffff;
@@ -12,8 +12,30 @@
   --outline: #dadce0;
   --text: #202124;
   --text-secondary: #5f6368;
+  --hover-overlay: rgba(60, 64, 67, 0.08);
   --elev-1: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
   --elev-2: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* Material dark: lighter primary, dark surfaces */
+  --primary: #8ab4f8;
+  --primary-hover: #aecbfa;
+  --on-primary: #202124;
+  --primary-container: #28384a;
+  --on-primary-container: #8ab4f8;
+  --green: #81c995;
+  --red: #f28b82;
+  --surface: #202124;
+  --surface-variant: #303134;
+  --outline: #3c4043;
+  --text: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --hover-overlay: rgba(232, 234, 237, 0.08);
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+  --elev-2: 0 1px 3px rgba(0, 0, 0, 0.6), 0 4px 8px 3px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
 }
 
 * {
@@ -47,7 +69,7 @@ body {
   justify-content: center;
   padding: 24px;
   text-align: center;
-  background: #fce8e6;
+  background: var(--surface-variant);
   color: var(--red);
   font-weight: 500;
 }
@@ -136,7 +158,7 @@ body {
 }
 
 .btn:hover {
-  background: rgba(26, 115, 232, 0.06);
+  background: var(--hover-overlay);
 }
 
 .btn--block {
@@ -168,7 +190,29 @@ body {
 }
 
 .btn--danger:hover {
-  background: rgba(234, 67, 53, 0.06);
+  background: var(--hover-overlay);
+}
+
+/* Icon button (theme toggle) */
+.icon-btn {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.icon-btn:hover {
+  background: var(--hover-overlay);
+  color: var(--text);
 }
 
 /* Segmented control (basemap toggle + draw toolbar) */
@@ -212,6 +256,11 @@ body {
 #search_container gmp-place-autocomplete,
 #search_container > * {
   width: 100%;
+}
+
+:root[data-theme="dark"] #search_container,
+:root[data-theme="dark"] #search_container gmp-place-autocomplete {
+  color-scheme: dark;
 }
 
 /* Inputs */
@@ -298,7 +347,7 @@ body {
 }
 
 .remove-btn:hover {
-  background: #e0e0e0;
+  background: var(--outline);
   color: var(--red);
 }
 

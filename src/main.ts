@@ -2,8 +2,11 @@ import "./styles.css";
 import { loadMap } from "./map";
 import { initLayers } from "./layers";
 import { initAnnotations } from "./annotations";
+import { initTheme } from "./theme";
 
 async function main() {
+  initTheme();
+
   let map: Awaited<ReturnType<typeof loadMap>>;
   try {
     map = await loadMap();
