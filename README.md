@@ -2,17 +2,8 @@
 
 Google Dash is a situational-awareness dashboard generator on Google Cloud. It connects to your
 data sources, lets you collaboratively annotate a Google Map, and shares that knowledge with
-stakeholders. It is a GCP port of [quickLaunch](https://github.com/mapbox/quickLaunch): the same
-flow — configure → load a basemap → search → drag-and-drop data → draw and annotate → persist — with
-every external dependency moved to Google equivalents.
-
-| Concern | quickLaunch | Google Dash |
-| --- | --- | --- |
-| Map / drawing / search | Mapbox GL JS / GL Draw / Geocoder | Google Maps JS API / Drawing library / Places |
-| Annotation storage | MongoDB | **Firestore _or_ Cloud Storage** (your choice) |
-| API host | local Express | Cloud Run |
-| Frontend host | parcel / serve | Firebase Hosting |
-| Bundler / language | parcel + vanilla JS | Vite + TypeScript |
+stakeholders. The flow: configure → load a basemap → search → drag-and-drop data → draw and
+annotate → persist.
 
 ## Features
 
@@ -68,8 +59,8 @@ data/       sample data.geojson for drag-and-drop testing
 public/     static assets (logo, favicon)
 ```
 
-The API exposes three routes (same contract as quickLaunch): `POST /saveannotation`,
-`GET /getannotations`, `POST /deleteannotation`, plus `GET /health`.
+The API exposes three routes: `POST /saveannotation`, `GET /getannotations`,
+`POST /deleteannotation`, plus `GET /health`.
 
 ## Deployment
 
