@@ -5,6 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="%VITE_FAVICON%" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -14,8 +20,10 @@
     <!-- Left info / control panel -->
     <div id="info_panel" class="side-panel side-panel--left">
       <div class="panel-section">
-        <img id="logo" src="%VITE_LOGO%" alt="logo" class="logo" />
-        <h3 class="title">%VITE_TITLE%</h3>
+        <div class="brand">
+          <img id="logo" src="%VITE_LOGO%" alt="logo" class="logo" />
+          <h3 class="title">%VITE_TITLE%</h3>
+        </div>
         <p class="description">%VITE_DESCRIPTION%</p>
       </div>
 
@@ -23,18 +31,20 @@
         <div id="search_container"></div>
       </div>
 
-      <div id="basemap-toggle" class="panel-section toggle-group">
-        <button id="roadmap" class="btn active">Streets</button>
-        <button id="light" class="btn">Light</button>
-        <button id="dark" class="btn">Dark</button>
-        <button id="hybrid" class="btn">Satellite</button>
+      <div class="panel-section">
+        <div id="basemap-toggle" class="seg">
+          <button id="roadmap" class="btn active">Streets</button>
+          <button id="light" class="btn">Light</button>
+          <button id="dark" class="btn">Dark</button>
+          <button id="hybrid" class="btn">Satellite</button>
+        </div>
       </div>
 
       <div class="panel-section">
-        <button id="annotation_toggle" class="btn btn--block">
+        <button id="annotation_toggle" class="btn btn--filled btn--block">
           Turn Annotation Mode <span id="annotation_onoff">On</span>
         </button>
-        <div id="draw_toolbar" class="toggle-group draw-toolbar hide">
+        <div id="draw_toolbar" class="seg draw-toolbar hide">
           <button id="draw_point" class="btn" data-mode="point">Point</button>
           <button id="draw_line" class="btn" data-mode="line">Line</button>
           <button id="draw_polygon" class="btn" data-mode="polygon">Polygon</button>

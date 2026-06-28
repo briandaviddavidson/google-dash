@@ -75,14 +75,14 @@ function annotationStyle(): google.maps.Data.StyleOptions {
   return {
     editable,
     draggable: editable,
-    fillColor: "#fbb03b",
-    fillOpacity: 0.25,
-    strokeColor: "#62b5b5",
+    fillColor: "#1a73e8",
+    fillOpacity: 0.18,
+    strokeColor: "#1967d2",
     strokeWeight: 2,
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 6,
-      fillColor: "#fbb03b",
+      fillColor: "#1a73e8",
       fillOpacity: 1,
       strokeColor: "#ffffff",
       strokeWeight: 2,
