@@ -1,0 +1,41 @@
+{
+  "name": "google-dash",
+  "version": "1.0.0",
+  "description": "Situational-awareness dashboard generator on GCP (Google Maps + Firestore/Cloud Storage)",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "config": "tsx scripts/config.ts",
+    "dev": "concurrently -n web,api -c blue,green \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "vite",
+    "dev:api": "tsx watch server/index.ts",
+    "build": "vite build",
+    "start": "tsx server/index.ts",
+    "emulator": "firebase emulators:start --only firestore",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.10.0",
+    "@google-cloud/storage": "^7.14.0",
+    "@googlemaps/js-api-loader": "^1.16.8",
+    "@tmcw/togeojson": "^5.8.1",
+    "cors": "^2.8.5",
+    "csv2geojson": "^5.1.2",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "shapefile": "^0.6.6"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/google.maps": "^3.58.1",
+    "@types/node": "^22.10.0",
+    "@types/shapefile": "^0.6.4",
+    "concurrently": "^9.1.0",
+    "firebase-tools": "^13.29.0",
+    "inquirer": "^12.3.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0"
+  }
+}

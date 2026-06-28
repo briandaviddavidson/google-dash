@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/getannotations", "run": { "serviceId": "google-dash-api", "region": "us-central1" } },
+      { "source": "/saveannotation", "run": { "serviceId": "google-dash-api", "region": "us-central1" } },
+      { "source": "/deleteannotation", "run": { "serviceId": "google-dash-api", "region": "us-central1" } },
+      { "source": "/health", "run": { "serviceId": "google-dash-api", "region": "us-central1" } },
+      { "source": "**", "destination": "/index.html" }
+    ]
+  },
+  "emulators": {
+    "firestore": { "port": 8080 }
+  }
+}

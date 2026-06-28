@@ -1,0 +1,10 @@
+node_modules
+dist
+src
+public
+data
+.git
+.env
+.env.local
+*.log
+.firebase

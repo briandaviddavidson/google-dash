@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>%VITE_TITLE%</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="%VITE_FAVICON%" type="image/x-icon" />
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <div id="annotation_banner" class="banner hide">Annotation Mode</div>
+
+    <!-- Left info / control panel -->
+    <div id="info_panel" class="side-panel side-panel--left">
+      <div class="panel-section">
+        <img id="logo" src="%VITE_LOGO%" alt="logo" class="logo" />
+        <h3 class="title">%VITE_TITLE%</h3>
+        <p class="description">%VITE_DESCRIPTION%</p>
+      </div>
+
+      <div class="panel-section">
+        <div id="search_container"></div>
+      </div>
+
+      <div id="basemap-toggle" class="panel-section toggle-group">
+        <button id="roadmap" class="btn active">Streets</button>
+        <button id="light" class="btn">Light</button>
+        <button id="dark" class="btn">Dark</button>
+        <button id="hybrid" class="btn">Satellite</button>
+      </div>
+
+      <div class="panel-section">
+        <button id="annotation_toggle" class="btn btn--block">
+          Turn Annotation Mode <span id="annotation_onoff">On</span>
+        </button>
+        <div id="draw_toolbar" class="toggle-group draw-toolbar hide">
+          <button id="draw_point" class="btn" data-mode="point">Point</button>
+          <button id="draw_line" class="btn" data-mode="line">Line</button>
+          <button id="draw_polygon" class="btn" data-mode="polygon">Polygon</button>
+          <button id="draw_finish" class="btn btn--accent">Finish</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="subtitle">Add Layers</h3>
+        <div id="dnd_area" class="dnd-hint">
+          Drag and drop files onto the map to add them<br />
+          (.shp, .csv, .kml, or .geojson)
+        </div>
+        <div id="layers_added" class="hide">
+          <p class="subtitle">Layers</p>
+          <ul id="layer_list" class="layer-list"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right annotation metadata panel -->
+    <div id="annotation_panel" class="side-panel side-panel--right hide">
+      <h3 class="subtitle">Annotation Information</h3>
+      <div class="fields">
+        <label>Unique ID</label>
+        <input disabled id="annotation_id" class="input" placeholder="UID" />
+        <label>Name</label>
+        <input id="annotation_name" class="input" placeholder="Name of annotation" />
+        <label>Description</label>
+        <textarea id="annotation_desc" class="textarea" placeholder="Description"></textarea>
+        <label>Notes</label>
+        <textarea id="annotation_notes" class="textarea" placeholder="Notes"></textarea>
+        <div id="annotation_measure" class="measure"></div>
+      </div>
+      <div class="save-area">
+        <button id="annotation_save" class="btn">Save</button>
+        <button id="annotation_delete" class="btn btn--danger">Delete</button>
+        <span id="annotation_spinner" class="spinner hide"></span>
+      </div>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
