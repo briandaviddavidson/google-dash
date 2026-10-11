@@ -99,6 +99,10 @@ body {
   right: 16px;
 }
 
+.side-panel--right > .subtitle {
+  padding: 16px 16px 0;
+}
+
 .panel-section {
   padding: 16px;
 }
