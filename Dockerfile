@@ -13,10 +13,11 @@ RUN npm run build:server
 FROM node:22-slim
 WORKDIR /app
 ENV NODE_ENV=production
+# Cloud Run sets PORT itself; default it so a plain `docker run` matches EXPOSE.
+ENV PORT=8080
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/build/server ./build/server
 USER node
-# Cloud Run injects PORT (defaults to 8080); the server honors process.env.PORT.
 EXPOSE 8080
 CMD ["node", "build/server/index.js"]
