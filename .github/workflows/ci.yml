@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build frontend (api and demo modes)
+        run: |
+          VITE_GOOGLE_MAPS_API_KEY=ci npm run build
+          VITE_GOOGLE_MAPS_API_KEY=ci VITE_STORAGE_MODE=local npx vite build --base /google-dash/
+      - run: npm run build:server
+      - run: npm audit --omit=dev --audit-level=high
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t google-dash-api .
+      - name: Smoke test
+        run: |
+          docker run -d --name api -p 8080:8080 -e AUTH_DISABLED=true -e STORAGE_BACKEND=memory google-dash-api
+          for i in $(seq 1 20); do curl -fs localhost:8080/health && exit 0; sleep 1; done
+          docker logs api; exit 1
