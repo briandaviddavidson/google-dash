@@ -1,4 +1,5 @@
-import { getAnnotations, saveAnnotation, deleteAnnotation } from "./api";
+import type { AnnotationStore } from "./api";
+import { showToast } from "./toast";
 import type { Feature } from "./types";
 
 type Mode = "map" | "annotate";
@@ -7,10 +8,12 @@ type DrawMode = "none" | "point" | "line" | "polygon";
 // google.maps.drawing.DrawingManager was removed from the Maps JS API in v3.65,
 // so annotations are drawn directly: click to drop vertices on the Data layer.
 let map: google.maps.Map;
+let store: AnnotationStore;
 let annotations: google.maps.Data;
 let infoWindow: google.maps.InfoWindow;
 
 let mode: Mode = "map";
+let canEdit = true;
 let drawMode: DrawMode = "none";
 let selectedId: string | null = null;
 
@@ -29,8 +32,9 @@ let descInput: HTMLTextAreaElement;
 let notesInput: HTMLTextAreaElement;
 let measure: HTMLElement;
 
-export async function initAnnotations(theMap: google.maps.Map) {
+export async function initAnnotations(theMap: google.maps.Map, theStore: AnnotationStore) {
   map = theMap;
+  store = theStore;
   panel = document.getElementById("annotation_panel")!;
   banner = document.getElementById("annotation_banner")!;
   onOff = document.getElementById("annotation_onoff")!;
@@ -47,6 +51,13 @@ export async function initAnnotations(theMap: google.maps.Map) {
 
   map.addListener("click", (e: google.maps.MapMouseEvent) => {
     if (e.latLng) handleDrawClick(e.latLng);
+  });
+
+  // Keep the length/area readout current while a selected shape is reshaped.
+  annotations.addListener("setgeometry", (e: google.maps.Data.SetGeometryEvent) => {
+    if (selectedId !== null && String(e.feature.getId()) === selectedId) {
+      measure.textContent = measurementFor(e.feature);
+    }
   });
 
   annotations.addListener("click", (e: google.maps.Data.MouseEvent) => {
@@ -90,12 +101,30 @@ function annotationStyle(): google.maps.Data.StyleOptions {
   };
 }
 
+/** Enable or disable editing (e.g. while signed out). */
+export function setCanEdit(allowed: boolean, reason = "") {
+  canEdit = allowed;
+  const toggle = document.getElementById("annotation_toggle") as HTMLButtonElement;
+  toggle.disabled = !allowed;
+  toggle.title = allowed ? "" : reason;
+  if (!allowed && mode === "annotate") toggleMode();
+}
+
+/** Re-fetch annotations from storage, e.g. after signing in. */
+export async function reloadAnnotations() {
+  annotations.forEach((f) => annotations.remove(f));
+  panel.classList.add("hide");
+  selectedId = null;
+  await loadSaved();
+}
+
 async function loadSaved() {
   try {
-    const fc = await getAnnotations();
+    const fc = await store.getAll();
     annotations.addGeoJson(fc);
   } catch (err) {
     console.error("failed to load annotations", err);
+    showToast((err as Error).message, "error");
   }
 }
 
@@ -224,9 +253,11 @@ async function onSave(e: Event) {
   const spinner = document.getElementById("annotation_spinner")!;
   spinner.classList.remove("hide");
   try {
-    await saveAnnotation(await featureToGeoJson(feature));
+    await store.save(await featureToGeoJson(feature));
+    showToast(store.mode === "local" ? "Saved in this browser" : "Saved");
   } catch (err) {
     console.error("save failed", err);
+    showToast((err as Error).message, "error");
   } finally {
     spinner.classList.add("hide");
   }
@@ -234,15 +265,18 @@ async function onSave(e: Event) {
 
 async function onDelete() {
   const feature = findSelected();
-  if (!feature) return;
+  if (!feature || selectedId === null) return;
+  const id = selectedId;
   annotations.remove(feature);
   panel.classList.add("hide");
+  selectedId = null;
   try {
-    await deleteAnnotation(selectedId!);
+    await store.remove(id);
   } catch (err) {
     console.error("delete failed", err);
+    annotations.add(feature); // put it back so the map matches storage
+    showToast((err as Error).message, "error");
   }
-  selectedId = null;
 }
 
 // Export a single Data.Feature to a GeoJSON Feature via the layer exporter.
@@ -274,6 +308,7 @@ function openInfo(feature: google.maps.Data.Feature, latLng: google.maps.LatLng)
 
 function toggleMode() {
   if (mode === "map") {
+    if (!canEdit) return;
     mode = "annotate";
     onOff.textContent = "Off";
     banner.classList.remove("hide");

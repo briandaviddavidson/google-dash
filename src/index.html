@@ -37,6 +37,9 @@
           <button id="theme_toggle" class="icon-btn" aria-label="Toggle dark mode"></button>
         </div>
         <p class="description">%VITE_DESCRIPTION%</p>
+        <p id="demo_note" class="demo-note hide">
+          Demo: annotations you save are stored in this browser only.
+        </p>
       </div>
 
       <div class="panel-section">
@@ -50,6 +53,11 @@
           <button id="dark" class="btn">Dark</button>
           <button id="hybrid" class="btn">Satellite</button>
         </div>
+      </div>
+
+      <div id="auth_section" class="panel-section hide">
+        <p id="auth_status" class="auth-status"></p>
+        <button id="auth_button" class="btn btn--block">Sign in with Google</button>
       </div>
 
       <div class="panel-section">
@@ -68,7 +76,7 @@
         <h3 class="subtitle">Add Layers</h3>
         <div id="dnd_area" class="dnd-hint">
           Drag and drop files onto the map to add them<br />
-          (.shp, .csv, .kml, or .geojson)
+          (.geojson, .kml, .csv, or .shp + .dbf)
         </div>
         <div id="layers_added" class="hide">
           <p class="subtitle">Layers</p>

@@ -1,65 +1,29 @@
 import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import { createStore, type GeoJsonFeature } from "./storage/index.js";
+import { createStore } from "./storage/index.js";
+import { authConfigFromEnv, firebaseVerifier, parseAllowlist } from "./auth.js";
+import { createApp } from "./app.js";
 
-const app = express();
-const port = Number(process.env.PORT) || 3000;
-
-app.use(cors());
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
-
-const storePromise = createStore();
-
-app.get("/health", (_req, res) => {
-  res.json({ ok: true, backend: process.env.STORAGE_BACKEND || "firestore" });
-});
-
-// Upsert a single annotation feature.
-app.post("/saveannotation", async (req, res) => {
-  try {
-    const feature = req.body as GeoJsonFeature;
-    if (!feature || feature.id === undefined || feature.id === null) {
-      return res.status(400).json({ error: "feature with an id is required" });
-    }
-    const store = await storePromise;
-    await store.save(feature);
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("saveannotation failed", err);
-    res.status(500).json({ error: "save failed" });
+async function main() {
+  const auth = authConfigFromEnv();
+  if (auth.disabled) {
+    console.warn("AUTH_DISABLED=true: anyone who can reach this API can edit annotations.");
   }
-});
 
-// Return all annotations as a GeoJSON FeatureCollection.
-app.get("/getannotations", async (_req, res) => {
-  try {
-    const store = await storePromise;
-    const features = await store.getAll();
-    res.json({ type: "FeatureCollection", features });
-  } catch (err) {
-    console.error("getannotations failed", err);
-    res.status(500).json({ error: "read failed" });
-  }
-});
+  const app = createApp({
+    store: await createStore(),
+    auth,
+    verifyToken: auth.disabled ? undefined : await firebaseVerifier(process.env.GCP_PROJECT_ID),
+    allowedOrigins: parseAllowlist(process.env.ALLOWED_ORIGINS),
+    backendName: process.env.STORAGE_BACKEND || "firestore",
+  });
 
-// Delete an annotation by id.
-app.post("/deleteannotation", async (req, res) => {
-  try {
-    const id = req.body?.id;
-    if (id === undefined || id === null) {
-      return res.status(400).json({ error: "id is required" });
-    }
-    const store = await storePromise;
-    await store.delete(String(id));
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("deleteannotation failed", err);
-    res.status(500).json({ error: "delete failed" });
-  }
-});
+  const port = Number(process.env.PORT) || 3000;
+  app.listen(port, () => {
+    console.log(`google-dash API listening on port ${port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.log(`google-dash API listening on port ${port}`);
+main().catch((err) => {
+  console.error(err instanceof Error ? err.message : err);
+  process.exit(1);
 });
