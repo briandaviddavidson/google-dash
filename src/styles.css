@@ -395,3 +395,41 @@ ul.info {
   font-size: 14px;
   line-height: 1.5;
 }
+
+/* Demo-mode note */
+.demo-note {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  font-size: 13px;
+}
+
+/* Toasts */
+.toasts {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--surface);
+  box-shadow: var(--elev-2);
+  font-size: 14px;
+  max-width: min(480px, calc(100vw - 32px));
+}
+
+.toast--error {
+  background: var(--red);
+  color: #fff;
+}

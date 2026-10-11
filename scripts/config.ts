@@ -24,8 +24,8 @@ async function run() {
   const answers = await inquirer.prompt<Answers>([
     { type: "input", name: "title", message: "Dashboard name?", default: "Google Dash" },
     { type: "input", name: "description", message: "Describe your dashboard use-case:", default: "A situational-awareness dashboard" },
-    { type: "input", name: "logo", message: "Logo image source:", default: "/logo.svg" },
-    { type: "input", name: "favicon", message: "Favicon location:", default: "/favicon.ico" },
+    { type: "input", name: "logo", message: "Logo image source:", default: "logo.svg" },
+    { type: "input", name: "favicon", message: "Favicon location:", default: "favicon.ico" },
     { type: "input", name: "mapsKey", message: "Google Maps API key:" },
     { type: "input", name: "apiBaseUrl", message: "API base URL:", default: "http://localhost:3000" },
     { type: "input", name: "projectId", message: "GCP project id:" },

@@ -3,6 +3,7 @@ import { loadMap } from "./map";
 import { initLayers } from "./layers";
 import { initAnnotations } from "./annotations";
 import { initTheme } from "./theme";
+import { createAnnotationStore } from "./api";
 
 async function main() {
   initTheme();
@@ -20,9 +21,13 @@ async function main() {
   }
 
   // The map is up; a failure in a sub-feature should not blank it.
+  const store = createAnnotationStore();
+  if (store.mode === "local") {
+    document.getElementById("demo_note")?.classList.remove("hide");
+  }
   try {
     initLayers(map);
-    await initAnnotations(map);
+    await initAnnotations(map, store);
   } catch (err) {
     console.error("feature init failed", err);
   }
