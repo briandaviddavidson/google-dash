@@ -10,20 +10,22 @@
     "dev:web": "vite",
     "dev:api": "tsx watch server/index.ts",
     "build": "vite build",
-    "start": "tsx server/index.ts",
-    "emulator": "firebase emulators:start --only firestore",
-    "typecheck": "tsc --noEmit"
+    "start": "node build/server/index.js",
+    "emulator": "npx firebase-tools emulators:start --only firestore",
+    "typecheck": "tsc --noEmit",
+    "build:server": "tsc -p tsconfig.server.json"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^7.10.0",
-    "@google-cloud/storage": "^7.14.0",
+    "@firebase/app": "^0.16.3",
+    "@firebase/auth": "^1.13.7",
+    "@google-cloud/firestore": "^9.3.1",
+    "@google-cloud/storage": "^8.4.0",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@tmcw/togeojson": "^5.8.1",
     "cors": "^2.8.5",
     "csv2geojson": "^5.1.2",
     "dotenv": "^16.6.1",
-    "express": "^4.21.2",
-    "firebase": "^13.0.0",
+    "express": "^5.3.0",
     "firebase-admin": "^14.5.0",
     "shapefile": "^0.6.6"
   },
@@ -34,10 +36,12 @@
     "@types/node": "^22.10.0",
     "@types/shapefile": "^0.6.4",
     "concurrently": "^9.1.0",
-    "firebase-tools": "^13.29.0",
     "inquirer": "^12.3.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vite": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

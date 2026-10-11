@@ -24,8 +24,8 @@ export function authConfigured(): boolean {
 export async function initAuth(onChange: (email: string | null) => void): Promise<Auth> {
   if (!authConfigured()) return disabledAuth;
 
-  const { initializeApp } = await import("firebase/app");
-  const fb = await import("firebase/auth");
+  const { initializeApp } = await import("@firebase/app");
+  const fb = await import("@firebase/auth");
   const app = initializeApp({
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
