@@ -18,6 +18,10 @@ interface Answers {
   collection?: string;
   bucket?: string;
   object?: string;
+  requireSignIn: boolean;
+  firebaseApiKey?: string;
+  firebaseAuthDomain?: string;
+  allowedEmails?: string;
 }
 
 async function run() {
@@ -59,6 +63,32 @@ async function run() {
       default: "annotations.geojson",
       when: (a) => a.storage === "gcs",
     },
+    {
+      type: "confirm",
+      name: "requireSignIn",
+      message: "Require Google sign-in to edit annotations? (do this for anything deployed)",
+      default: true,
+    },
+    {
+      type: "input",
+      name: "firebaseApiKey",
+      message: "Firebase web API key (Project settings > Your apps):",
+      when: (a) => a.requireSignIn,
+    },
+    {
+      type: "input",
+      name: "firebaseAuthDomain",
+      message: "Firebase auth domain:",
+      default: (a: Answers) => `${a.projectId}.firebaseapp.com`,
+      when: (a) => a.requireSignIn,
+    },
+    {
+      type: "input",
+      name: "allowedEmails",
+      message: "Who may edit? Emails or @domains, comma-separated:",
+      when: (a) => a.requireSignIn,
+      validate: (v: string) => v.trim().length > 0 || "Add at least one email or @domain",
+    },
   ]);
 
   const lines = [
@@ -71,6 +101,9 @@ async function run() {
     `VITE_DESCRIPTION=${answers.description}`,
     `VITE_LOGO=${answers.logo}`,
     `VITE_FAVICON=${answers.favicon}`,
+    `VITE_FIREBASE_API_KEY=${answers.firebaseApiKey ?? ""}`,
+    `VITE_FIREBASE_AUTH_DOMAIN=${answers.firebaseAuthDomain ?? ""}`,
+    `VITE_FIREBASE_PROJECT_ID=${answers.requireSignIn ? answers.projectId : ""}`,
     "",
     "# --- Server ---",
     "PORT=3000",
@@ -79,6 +112,10 @@ async function run() {
     `FIRESTORE_COLLECTION=${answers.collection ?? "annotations"}`,
     `GCS_BUCKET=${answers.bucket ?? ""}`,
     `GCS_OBJECT=${answers.object ?? "annotations.geojson"}`,
+    `ALLOWED_EMAILS=${answers.allowedEmails ?? ""}`,
+    "PUBLIC_READ=true",
+    `AUTH_DISABLED=${answers.requireSignIn ? "false" : "true"}`,
+    "ALLOWED_ORIGINS=http://localhost:1234",
     "",
   ];
 

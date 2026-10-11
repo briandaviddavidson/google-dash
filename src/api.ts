@@ -17,10 +17,15 @@ export function storageMode(): StorageMode {
   return import.meta.env.VITE_STORAGE_MODE === "local" ? "local" : "api";
 }
 
-export function createAnnotationStore(): AnnotationStore {
-  return storageMode() === "local"
-    ? new LocalAnnotationStore(window.localStorage)
-    : new HttpAnnotationStore(import.meta.env.VITE_API_BASE_URL ?? "");
+export function createAnnotationStore(token: () => Promise<string | null>): AnnotationStore {
+  if (storageMode() === "local") return new LocalAnnotationStore(window.localStorage);
+  return new HttpAnnotationStore(
+    import.meta.env.VITE_API_BASE_URL ?? "",
+    async (): Promise<Record<string, string>> => {
+      const t = await token();
+      return t ? { Authorization: `Bearer ${t}` } : {};
+    }
+  );
 }
 
 // In production the frontend calls the API same-origin (Firebase Hosting

@@ -13,6 +13,7 @@ let annotations: google.maps.Data;
 let infoWindow: google.maps.InfoWindow;
 
 let mode: Mode = "map";
+let canEdit = true;
 let drawMode: DrawMode = "none";
 let selectedId: string | null = null;
 
@@ -98,6 +99,23 @@ function annotationStyle(): google.maps.Data.StyleOptions {
       strokeWeight: 2,
     },
   };
+}
+
+/** Enable or disable editing (e.g. while signed out). */
+export function setCanEdit(allowed: boolean, reason = "") {
+  canEdit = allowed;
+  const toggle = document.getElementById("annotation_toggle") as HTMLButtonElement;
+  toggle.disabled = !allowed;
+  toggle.title = allowed ? "" : reason;
+  if (!allowed && mode === "annotate") toggleMode();
+}
+
+/** Re-fetch annotations from storage, e.g. after signing in. */
+export async function reloadAnnotations() {
+  annotations.forEach((f) => annotations.remove(f));
+  panel.classList.add("hide");
+  selectedId = null;
+  await loadSaved();
 }
 
 async function loadSaved() {
@@ -290,6 +308,7 @@ function openInfo(feature: google.maps.Data.Feature, latLng: google.maps.LatLng)
 
 function toggleMode() {
   if (mode === "map") {
+    if (!canEdit) return;
     mode = "annotate";
     onOff.textContent = "Off";
     banner.classList.remove("hide");

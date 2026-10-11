@@ -433,3 +433,16 @@ ul.info {
   background: var(--red);
   color: #fff;
 }
+
+/* Sign-in */
+.auth-status {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
